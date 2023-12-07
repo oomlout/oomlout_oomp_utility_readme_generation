@@ -8,7 +8,8 @@ folder_template = "templates"
 file_template_default = os.path.join(folder_template, "oomlout_template_part_default.md.j2")
 
 def main(**kwargs):
-    folder = kwargs.get("folder", os.path.dirname(__file__))
+    folder = kwargs.get("folder", f"os.path.dirname(__file__)/parts")
+    folder = folder.replace("\\","/")
     kwargs["folder_template"] = folder_template
     kwargs["file_template"] = file_template_default
     folder_template_absolute = os.path.join(os.path.dirname(__file__), folder_template)
