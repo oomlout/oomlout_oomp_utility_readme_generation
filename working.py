@@ -6,16 +6,19 @@ import jinja2
 
 folder_template = "templates"
 file_template_default = os.path.join(folder_template, "oomlout_template_part_default.md.j2")
+file_template_default_absolute = os.path.join(os.path.dirname(__file__), file_template_default)
 
 def main(**kwargs):
+    
     folder = kwargs.get("folder", f"os.path.dirname(__file__)/parts")
     folder = folder.replace("\\","/")
     kwargs["folder_template"] = folder_template
-    kwargs["file_template"] = file_template_default
+    kwargs["file_template"] = file_template_default_absolute
     folder_template_absolute = os.path.join(os.path.dirname(__file__), folder_template)
     kwargs["folder_template_absolute"] = folder_template_absolute
     file_template_absolute = os.path.join(os.path.dirname(__file__), file_template_default)
     kwargs["file_template_absolute"] = file_template_absolute
+    print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
     create_readme_recursive(**kwargs)
     
 def create_readme_recursive(**kwargs):
@@ -34,7 +37,8 @@ def create_readme_recursive(**kwargs):
 def create_readme(**kwargs):
     directory = kwargs.get("directory", os.getcwd())    
     kwargs["directory"] = directory
-    file_template = kwargs.get("file_template", file_template_default)
+    file_template = kwargs.get("file_template", file_template_default_absolute)
+    kwargs["file_template"] = file_template
 
 
 
@@ -44,7 +48,7 @@ def create_readme(**kwargs):
 def generate_readme_generic(**kwargs):
     import os
     directory = kwargs.get("directory",os.getcwd())    
-    file_template = kwargs.get("file_template","")
+    file_template = kwargs.get("file_template", file_template_default_absolute)
     file_output = f"{directory}/readme.md"
     details = {}
 
