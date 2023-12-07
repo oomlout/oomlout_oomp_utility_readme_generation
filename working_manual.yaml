@@ -1,0 +1,8 @@
+id: oomlout_oomp_utility_readme_generation
+name: "OOMP Utility Readme Generation"
+description: "This is part of OOMP the Oopen Organization Method For Parts. For more details: https://github.com/oomlout/oomp_base  "
+readme_manual: |
+  ## What it does
+  This utility generates a readme.md file for a given OOMP part. It is designed to be run from the command line from within a parts/ directory or an individual part.
+  ## Usage
+  * run utility_oomp_readme_geneartion.py from within an oomp parts/ folder or an individual part folder
