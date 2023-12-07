@@ -87,8 +87,11 @@ def get_jinja2_template(**kwargs):
     dict_data = kwargs.get("dict_data",{})
 
     markdown_string = ""
-    #if file _temoplate doesn't exist
-    file_template = file_template.replace("/", "\\")
+    #if running in windows
+    if os.name == "nt":
+        file_template = file_template.replace("/", "\\")
+    else:
+        file_template = file_template.replace("\\", "/")
     with open(file_template, "r") as infile:
         markdown_string = infile.read()
     data2 = copy.deepcopy(dict_data)
