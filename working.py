@@ -78,6 +78,12 @@ def generate_readme_generic(**kwargs):
     files2 = copy.deepcopy(files)
     details["files"] = files2
 
+    # add a markdown formated table of all values in details
+    details_table = ""
+    for key in details:
+        details_table += f"|{key}|{details[key]}|\n"
+    details["table_markdown"] = details_table
+
     file_template = file_template
     file_output = file_output
     dict_data = details
