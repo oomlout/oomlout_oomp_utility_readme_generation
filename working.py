@@ -27,6 +27,7 @@ def create_readme_recursive(**kwargs):
     folder_template_absolute = kwargs.get("folder_template_absolute", "")
     kwargs["folder_template_absolute"] = folder_template_absolute
     filter = kwargs.get("filter", "")
+    count = 0
     for item in os.listdir(folder):
         item_absolute = os.path.join(folder, item)
         if filter in item:            
@@ -35,6 +36,9 @@ def create_readme_recursive(**kwargs):
                 if os.path.exists(os.path.join(item_absolute, "working.yaml")):
                     kwargs["directory"] = item_absolute
                     create_readme(**kwargs)
+                    count += 1
+                    if count % 100 == 0:
+                        print(f"count: {count}")
 
 def create_readme(**kwargs):
     directory = kwargs.get("directory", os.getcwd())    
@@ -117,7 +121,7 @@ def get_jinja2_template(**kwargs):
         os.makedirs(directory)
     with open(file_output, "w", encoding="utf-8") as outfile:
         outfile.write(markdown_string)
-        print(f"jinja2 template file written: {file_output}")
+        #print(f"jinja2 template file written: {file_output}")
 
 if __name__ == '__main__':
     #folder is the path it was launched from
