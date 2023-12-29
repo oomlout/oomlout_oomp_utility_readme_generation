@@ -84,8 +84,11 @@ def generate_readme_generic(**kwargs):
 
     # add a markdown formated table of all values in details
     details_table = ""
+    #make headers
+    details_table += f"| key | value |  \n"
+    details_table += f"| --- | --- |  \n"
     for key in details:
-        details_table += f"|{key}|{details[key]}|\n"
+        details_table += f"| {key} | {details[key]} |  \n"
     details["table_markdown"] = details_table
 
     file_template = file_template
