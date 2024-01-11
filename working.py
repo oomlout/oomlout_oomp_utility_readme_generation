@@ -88,7 +88,8 @@ def generate_readme_generic(**kwargs):
     details_table += f"| key | value |  \n"
     details_table += f"| --- | --- |  \n"
     for key in details:
-        details_table += f"| {key} | {details[key]} |  \n"
+        if key != "files":
+            details_table += f"| {key} | {details[key]} |  \n"
     details["table_markdown"] = details_table
 
     file_template = file_template
