@@ -38,38 +38,5 @@ note: This is part of OOMP the Oopen Organization Method For Parts. For more det
 * md5_6_alpha: {{ p.md5_6_alpha }}
 * md5_6: {{ p.md5_6 }}
 
-
-
-{## if oomlout_oomp_utility_custom_data_manipulation then#}
-{% if p.oomlout_oomp_utility_custom_data_manipulation %}
-
-### oomlout_oomp_utility_custom_data_manipulation
-#### label print
-[3x2]({{ p.link_oomlout_label_3x2 }})
-[2x1]({{ p.link_oomlout_label_2x1 }})
-[6x4]({{ p.link_oomlout_label_6x4 }})    
-
-#### link
-
-{% for i in range(1, 26) %}{% if p['link_' ~ i] is defined %}[{{ p['link_' ~ i ~ '_name'] }}]({{ p['link_' ~ i] }}){% endif %} {% endfor %}     
-
-#### price
-{% if p.price_1 is defined %}
-#### price table
-| dist | 1 | 100 | 200 | 1000 | 10000 |
-|------|---|-----|-----|------|-------|
-| default | {{ p.price_1 }} | {{ p.price_100 }} | {{ p.price_200 }} | {{ p.price_1000 }} | {{ p.price_10000 }} |
-{% for dist in range(1, 11) %}
-{% if p['price_' ~ dist ~ '_1'] is defined %}
-| {{ dist }} | {{ p['price_' ~ dist ~ '_1'] }} | {{ p['price_' ~ dist ~ '_100'] }} | {{ p['price_' ~ dist ~ '_200'] }} | {{ p['price_' ~ dist ~ '_1000'] }} | {{ p['price_' ~ dist ~ '_10000'] }} |
-{% endif %}
-{% endfor %}
-{% endif %}
-
-{% endif %}
-
-
-
-
 ### all codes 
 {{ p.table_markdown }}
