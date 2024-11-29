@@ -26,19 +26,43 @@ def create_readme_recursive(**kwargs):
     kwargs["folder"] = folder
     folder_template_absolute = kwargs.get("folder_template_absolute", "")
     kwargs["folder_template_absolute"] = folder_template_absolute
-    filter = kwargs.get("filter", "")
+    
     count = 0
+    
+    
+    import threading
+    semaphore = threading.Semaphore(1000)
+    threads = []
+
+    def create_thread(item, **kwargs):
+        with semaphore:
+            create_recursive_thread(item, **kwargs)
+    
     for item in os.listdir(folder):
-        item_absolute = os.path.join(folder, item)
-        if filter in item:            
-            if os.path.isdir(item_absolute):
-                #if working.yaml exists in the folder
-                if os.path.exists(os.path.join(item_absolute, "working.yaml")):
-                    kwargs["directory"] = item_absolute
-                    create_readme(**kwargs)
-                    count += 1
-                    if count % 100 == 0:
-                        print(f"count: {count}")
+        thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+        threads.append(thread)
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+cnt_readme = 0
+
+def create_recursive_thread(item, **kwargs):
+    global cnt_readme
+    folder = kwargs.get("folder")
+    item_absolute = os.path.join(folder, item)
+    
+    filter = kwargs.get("filter", "")
+    if filter in item:            
+        if os.path.isdir(item_absolute):
+            #if working.yaml exists in the folder
+            if os.path.exists(os.path.join(item_absolute, "working.yaml")):
+                kwargs["directory"] = item_absolute
+                create_readme(**kwargs)
+                cnt_readme += 1
+                if cnt_readme % 100 == 0:
+                    print(f".", end="")
+
 
 def create_readme(**kwargs):
     directory = kwargs.get("directory", os.getcwd())    
