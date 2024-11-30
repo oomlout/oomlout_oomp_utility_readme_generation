@@ -3,6 +3,7 @@ import yaml
 import glob
 import copy
 import jinja2    
+import pickle
 
 folder_template = "templates"
 file_template_default = os.path.join(folder_template, "oomlout_template_part_default.md.j2")
@@ -39,7 +40,9 @@ def create_readme_recursive(**kwargs):
             create_recursive_thread(item, **kwargs)
     
     for item in os.listdir(folder):
-        thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+        #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+        kwargs["item"] = pickle.loads(pickle.dumps(item,-1))
+        thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
         threads.append(thread)
         thread.start()
     for thread in threads:
@@ -47,7 +50,8 @@ def create_readme_recursive(**kwargs):
 
 cnt_readme = 0
 
-def create_recursive_thread(item, **kwargs):
+def create_recursive_thread(**kwargs):
+    item = kwargs.get("item")
     global cnt_readme
     folder = kwargs.get("folder")
     item_absolute = os.path.join(folder, item)
