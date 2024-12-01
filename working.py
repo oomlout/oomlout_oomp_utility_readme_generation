@@ -35,13 +35,13 @@ def create_readme_recursive(**kwargs):
     semaphore = threading.Semaphore(1000)
     threads = []
 
-    def create_thread(item, **kwargs):
+    def create_thread(**kwargs):
         with semaphore:
-            create_recursive_thread(item, **kwargs)
+            create_recursive_thread(**kwargs)
     
     for item in os.listdir(folder):
         #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
-        kwargs["item"] = pickle.loads(pickle.dumps(item,-1))
+        kwargs["item"] = item
         thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
         threads.append(thread)
         thread.start()
