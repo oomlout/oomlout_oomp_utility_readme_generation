@@ -4,6 +4,7 @@ import glob
 import copy
 import jinja2    
 import pickle
+import io 
 
 folder_template = "templates"
 file_template_default = os.path.join(folder_template, "oomlout_template_part_default.md.j2")
@@ -138,7 +139,9 @@ def get_jinja2_template(**kwargs):
         file_template = file_template.replace("\\", "/")
     with open(file_template, "r") as infile:
         markdown_string = infile.read()
-    data2 = copy.deepcopy(dict_data)
+    #data2 = copy.deepcopy(dict_data)
+    #use pickle to deep copy the dictionary
+    data2 = pickle.loads(pickle.dumps(dict_data, -1))
 
 
     try:
@@ -151,9 +154,21 @@ def get_jinja2_template(**kwargs):
     directory = os.path.dirname(file_output)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    with open(file_output, "w", encoding="utf-8") as outfile:
-        outfile.write(markdown_string)
-        #print(f"jinja2 template file written: {file_output}")
+    
+    #mode = "open"
+    mode = "buffer"
+    
+    if mode == "open":
+        with open(file_output, "w", encoding="utf-8") as outfile:
+            outfile.write(markdown_string)
+            
+    elif mode == "buffer":
+        #write to a buffer then save for speen
+        with io.StringIO() as outfile:
+            outfile.write(markdown_string)
+            with open(file_output, "w", encoding="utf-8") as outfile2:
+                outfile2.write(outfile.getvalue())
+                
 
 if __name__ == '__main__':
     #folder is the path it was launched from
@@ -162,5 +177,6 @@ if __name__ == '__main__':
     folder = os.path.dirname(__file__)
     #folder = "C:/gh/oomlout_oomp_builder/parts"
     #folder = "C:/gh/oomlout_oomp_part_generation_version_1/parts"
+    folder = "Z:\\oomlout_oomp_current_version_fast_test\\parts"
     kwargs["folder"] = folder
     main(**kwargs)
