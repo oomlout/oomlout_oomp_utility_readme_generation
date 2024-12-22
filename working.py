@@ -116,9 +116,24 @@ def generate_readme_generic(**kwargs):
     #make headers
     details_table += f"| key | value |  \n"
     details_table += f"| --- | --- |  \n"
+    key_skip_list = []
+    key_skip_list.append("bip_")
+    key_skip_list.append("_no_")
+    key_skip_list.append("_length_")
+    key_skip_list.append("_capital")
+    key_skip_list.append("_upper")
+    key_skip_list.append("_only_numbers")
+    key_skip_list.append("_first_")
+    key_skip_list.append("_last_")
+    key_skip_list.append("price_")
     for key in details:
         if key != "files":
-            details_table += f"| {key} | {details[key]} |  \n"
+            include = True
+            for key_skip in key_skip_list:
+                if key_skip in key:
+                    include = False
+            if include:
+                details_table += f"| {key} | {details[key]} |  \n"
     details["table_markdown"] = details_table
 
     file_template = file_template
