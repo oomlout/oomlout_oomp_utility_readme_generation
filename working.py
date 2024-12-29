@@ -12,8 +12,28 @@ file_template_default_absolute = os.path.join(os.path.dirname(__file__), file_te
 
 def main(**kwargs):
     
-    folder = kwargs.get("folder", f"os.path.dirname(__file__)/parts")
+    folders_to_try = []
+    folders_to_try.append("/parts")
+    folders_to_try.append("/things")
+
+    #default try
+    folder = kwargs.get("folder", f"{os.path.dirname(__file__)}/parts")
     folder = folder.replace("\\","/")
+    #print(f"folder: {folder}")
+    ends_with_test = False
+    for folder_try in folders_to_try:        
+        if folder_try in folder:
+            ends_with_test = True
+
+    if not os.path.exists(folder) or not ends_with_test:
+        for folder_try in folders_to_try:
+            folder_test = f"{folder}{folder_try}"
+            #print(f"testing folder: {folder_test}")
+            if os.path.exists(folder_test):
+                folder = folder_test
+                break
+    kwargs["folder"] = folder
+    print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
     kwargs["folder_template"] = folder_template
     kwargs["file_template"] = file_template_default_absolute
     folder_template_absolute = os.path.join(os.path.dirname(__file__), folder_template)
@@ -39,8 +59,9 @@ def create_readme_recursive(**kwargs):
     def create_thread(**kwargs):
         with semaphore:
             create_recursive_thread(**kwargs)
-    
-    for item in os.listdir(folder):
+    folders = os.listdir(folder)
+    print(f"folders: {folders}")
+    for item in folders:
         #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
         kwargs["item"] = item
         thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
@@ -189,9 +210,12 @@ if __name__ == '__main__':
     #folder is the path it was launched from
     
     kwargs = {}
-    folder = os.path.dirname(__file__)
+    #folder is the command line launch path
+    folder = os.getcwd()
+    #folder = os.path.dirname(__file__)
     #folder = "C:/gh/oomlout_oomp_builder/parts"
     #folder = "C:/gh/oomlout_oomp_part_generation_version_1/parts"
     folder = "Z:\\oomlout_oomp_current_version_fast_test\\parts"
     kwargs["folder"] = folder
+    print(f"generating for folder: {folder}")
     main(**kwargs)
