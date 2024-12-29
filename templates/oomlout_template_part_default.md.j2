@@ -3,7 +3,7 @@
 note: This is part of OOMP the Oopen Organization Method For Parts. For more details: https://github.com/oomlout/oomp_base
 
 ##  part details
-{% if "image.jpg" in p.files %}[![](image_600.jpg)](drawing.jpg){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".jpg" in p.files %}
+{% if "image.jpg" in p.files %}[![](image_600.jpg)](image.jpg){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".jpg" in p.files %}
 [![](image_{{ i }}_300.jpg)](image_{{ i }}.jpg){% endif %}{% endfor %}{% endif %}{% if "image.png" in p.files %}
 [![](image_600.png)](image.png){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".png" in p.files %}
 [![](image_{{ i }}_300.png)](image_{{ i }}.png){% endif %}{% endfor %}{% endif %}{% if "dimension.jpg" in p.files %}[![](dimension_600.jpg)](drawing.jpg){% for i in range(1, 11) %}{% if "dimension_" ~ i ~ ".jpg" in p.files %}
@@ -12,8 +12,11 @@ note: This is part of OOMP the Oopen Organization Method For Parts. For more det
 [![](dimension_{{ i }}_300.png)](dimension_{{ i }}.png){% endif %}{% endfor %}{% endif %}{% if "drawing.jpg" in p.files %}[![](drawing_600.jpg)](drawing.jpg){% for i in range(1, 11) %}{% if "drawing_" ~ i ~ ".jpg" in p.files %}
 [![](drawing_{{ i }}_300.jpg)](drawing_{{ i }}.jpg){% endif %}{% endfor %}{% endif %}{% if "drawing.png" in p.files %}
 [![](drawing_600.png)](drawing.png){% for i in range(1, 11) %}{% if "drawing_" ~ i ~ ".png" in p.files %}
-[![](drawing_{{ i }}_300.png)](drawing_{{ i }}.png){% endif %}{% endfor %}{% endif %}
-
+[![](drawing_{{ i }}_300.png)](drawing_{{ i }}.png){% endif %}{% endfor %}{% endif %}  
+{% if "image.png" in p.files %}[![](image_600.png)](image.jpg){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".png" in p.files %}
+{% endif %}{% endfor %}
+{% if "3dpr.png" in p.files %}[![](3dpr.png)](3dpr.png){% for i in range(1, 11) %}{% if "3dpr_" ~ i ~ ".png" in p.files %}
+{% endif %}{% endfor %}
 
 {{ p.description }}
 
