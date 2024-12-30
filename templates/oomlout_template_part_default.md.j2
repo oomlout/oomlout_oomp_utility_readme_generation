@@ -14,11 +14,13 @@ note: This is part of OOMP the Oopen Organization Method For Parts. For more det
 [![](drawing_600.png)](drawing.png){% for i in range(1, 11) %}{% if "drawing_" ~ i ~ ".png" in p.files %}
 [![](drawing_{{ i }}_300.png)](drawing_{{ i }}.png){% endif %}{% endfor %}{% endif %}  
 {% if "image.png" in p.files %}[![](image_600.png)](image.jpg){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".png" in p.files %}
-{% endif %}{% endfor %}
+{% endif %}{% endfor %}{% endif %}
 {% if "3dpr.png" in p.files %}[![](3dpr.png)](3dpr.png){% for i in range(1, 11) %}{% if "3dpr_" ~ i ~ ".png" in p.files %}
-{% endif %}{% endfor %}
+{% endif %}{% endfor %}{% endif %}
 
 {{ p.description }}
+
+{% if "image.png" in p.files %}[![](image_600.png)](image.png){% for i in range(1, 11) %}{% if "image_" ~ i ~ ".png" in p.files %}[![](image_{{ i }}_300.png)](image_{{ i }}.png){% endif %}{% endfor %}{% endif %}
 
 ### name
 * name: {{ p.name }}
