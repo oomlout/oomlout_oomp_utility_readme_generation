@@ -118,92 +118,94 @@ def generate_readme_generic(**kwargs):
             except yaml.YAMLError as exc:   
                 print(exc)
     
-    #      file part
-    files = []    
-    #get a list of recursive files
-    files = glob.glob(f"{directory}/**/*.*", recursive=True)
-    #replace all \\ with /
-    for i in range(len(files)):
-        files[i] = files[i].replace("\\","/")
-    #remove the directory from the file name
-    directory = directory.replace("\\","/")
-    for i in range(len(files)):
-        files[i] = files[i].replace(f"{directory}/","")    
-    files2 = copy.deepcopy(files)
-    details["files"] = files2
 
-    # add a markdown formated table of all values in details
-    details_table = ""
-    #make headers
-    details_table += f"| key | value |  \n"
-    details_table += f"| --- | --- |  \n"
-    key_skip_list = []
-    key_skip_list.append("bip_")
-    key_skip_list.append("_no_")
-    key_skip_list.append("_length_")
-    key_skip_list.append("_capital")
-    key_skip_list.append("_upper")
-    key_skip_list.append("_only_numbers")
-    key_skip_list.append("_first_")
-    key_skip_list.append("_last_")
-    key_skip_list.append("price_")
-    for key in details:
-        if key != "files":
-            include = True
-            for key_skip in key_skip_list:
-                if key_skip in key:
-                    include = False
-            if include:
-                details_table += f"| {key} | {details[key]} |  \n"
-    details["table_markdown"] = details_table
+    if details != None:
+        #      file part
+        files = []    
+        #get a list of recursive files
+        files = glob.glob(f"{directory}/**/*.*", recursive=True)
+        #replace all \\ with /
+        for i in range(len(files)):
+            files[i] = files[i].replace("\\","/")
+        #remove the directory from the file name
+        directory = directory.replace("\\","/")
+        for i in range(len(files)):
+            files[i] = files[i].replace(f"{directory}/","")    
+        files2 = copy.deepcopy(files)
+        details["files"] = files2
 
-    file_template = file_template
-    file_output = file_output
-    dict_data = details
-    get_jinja2_template(file_template=file_template,file_output=file_output,dict_data=dict_data)
+        # add a markdown formated table of all values in details
+        details_table = ""
+        #make headers
+        details_table += f"| key | value |  \n"
+        details_table += f"| --- | --- |  \n"
+        key_skip_list = []
+        key_skip_list.append("bip_")
+        key_skip_list.append("_no_")
+        key_skip_list.append("_length_")
+        key_skip_list.append("_capital")
+        key_skip_list.append("_upper")
+        key_skip_list.append("_only_numbers")
+        key_skip_list.append("_first_")
+        key_skip_list.append("_last_")
+        key_skip_list.append("price_")
+        for key in details:
+            if key != "files":
+                include = True
+                for key_skip in key_skip_list:
+                    if key_skip in key:
+                        include = False
+                if include:
+                    details_table += f"| {key} | {details[key]} |  \n"
+        details["table_markdown"] = details_table
 
-def get_jinja2_template(**kwargs):
-    file_template = kwargs.get("file_template","")
-    file_output = kwargs.get("file_output","")
-    dict_data = kwargs.get("dict_data",{})
+        file_template = file_template
+        file_output = file_output
+        dict_data = details
+        get_jinja2_template(file_template=file_template,file_output=file_output,dict_data=dict_data)
 
-    markdown_string = ""
-    #if running in windows
-    if os.name == "nt":
-        file_template = file_template.replace("/", "\\")
-    else:
-        file_template = file_template.replace("\\", "/")
-    with open(file_template, "r") as infile:
-        markdown_string = infile.read()
-    #data2 = copy.deepcopy(dict_data)
-    #use pickle to deep copy the dictionary
-    data2 = pickle.loads(pickle.dumps(dict_data, -1))
+    def get_jinja2_template(**kwargs):
+        file_template = kwargs.get("file_template","")
+        file_output = kwargs.get("file_output","")
+        dict_data = kwargs.get("dict_data",{})
+
+        markdown_string = ""
+        #if running in windows
+        if os.name == "nt":
+            file_template = file_template.replace("/", "\\")
+        else:
+            file_template = file_template.replace("\\", "/")
+        with open(file_template, "r") as infile:
+            markdown_string = infile.read()
+        #data2 = copy.deepcopy(dict_data)
+        #use pickle to deep copy the dictionary
+        data2 = pickle.loads(pickle.dumps(dict_data, -1))
 
 
-    try:
-        markdown_string = jinja2.Template(markdown_string).render(p=data2)
-    except Exception as e:
-        print(f"error in jinja2 template: {file_template}")
-        print(e)
-        markdown_string = f"markdown_string_error\n{e}"
-    #make directory if it doesn't exist
-    directory = os.path.dirname(file_output)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    
-    #mode = "open"
-    mode = "buffer"
-    
-    if mode == "open":
-        with open(file_output, "w", encoding="utf-8") as outfile:
-            outfile.write(markdown_string)
-            
-    elif mode == "buffer":
-        #write to a buffer then save for speen
-        with io.StringIO() as outfile:
-            outfile.write(markdown_string)
-            with open(file_output, "w", encoding="utf-8") as outfile2:
-                outfile2.write(outfile.getvalue())
+        try:
+            markdown_string = jinja2.Template(markdown_string).render(p=data2)
+        except Exception as e:
+            print(f"error in jinja2 template: {file_template}")
+            print(e)
+            markdown_string = f"markdown_string_error\n{e}"
+        #make directory if it doesn't exist
+        directory = os.path.dirname(file_output)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
+        #mode = "open"
+        mode = "buffer"
+        
+        if mode == "open":
+            with open(file_output, "w", encoding="utf-8") as outfile:
+                outfile.write(markdown_string)
+                
+        elif mode == "buffer":
+            #write to a buffer then save for speen
+            with io.StringIO() as outfile:
+                outfile.write(markdown_string)
+                with open(file_output, "w", encoding="utf-8") as outfile2:
+                    outfile2.write(outfile.getvalue())
                 
 
 if __name__ == '__main__':
