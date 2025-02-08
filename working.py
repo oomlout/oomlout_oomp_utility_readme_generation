@@ -164,48 +164,48 @@ def generate_readme_generic(**kwargs):
         dict_data = details
         get_jinja2_template(file_template=file_template,file_output=file_output,dict_data=dict_data)
 
-    def get_jinja2_template(**kwargs):
-        file_template = kwargs.get("file_template","")
-        file_output = kwargs.get("file_output","")
-        dict_data = kwargs.get("dict_data",{})
+def get_jinja2_template(**kwargs):
+    file_template = kwargs.get("file_template","")
+    file_output = kwargs.get("file_output","")
+    dict_data = kwargs.get("dict_data",{})
 
-        markdown_string = ""
-        #if running in windows
-        if os.name == "nt":
-            file_template = file_template.replace("/", "\\")
-        else:
-            file_template = file_template.replace("\\", "/")
-        with open(file_template, "r") as infile:
-            markdown_string = infile.read()
-        #data2 = copy.deepcopy(dict_data)
-        #use pickle to deep copy the dictionary
-        data2 = pickle.loads(pickle.dumps(dict_data, -1))
+    markdown_string = ""
+    #if running in windows
+    if os.name == "nt":
+        file_template = file_template.replace("/", "\\")
+    else:
+        file_template = file_template.replace("\\", "/")
+    with open(file_template, "r") as infile:
+        markdown_string = infile.read()
+    #data2 = copy.deepcopy(dict_data)
+    #use pickle to deep copy the dictionary
+    data2 = pickle.loads(pickle.dumps(dict_data, -1))
 
 
-        try:
-            markdown_string = jinja2.Template(markdown_string).render(p=data2)
-        except Exception as e:
-            print(f"error in jinja2 template: {file_template}")
-            print(e)
-            markdown_string = f"markdown_string_error\n{e}"
-        #make directory if it doesn't exist
-        directory = os.path.dirname(file_output)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        
-        #mode = "open"
-        mode = "buffer"
-        
-        if mode == "open":
-            with open(file_output, "w", encoding="utf-8") as outfile:
-                outfile.write(markdown_string)
-                
-        elif mode == "buffer":
-            #write to a buffer then save for speen
-            with io.StringIO() as outfile:
-                outfile.write(markdown_string)
-                with open(file_output, "w", encoding="utf-8") as outfile2:
-                    outfile2.write(outfile.getvalue())
+    try:
+        markdown_string = jinja2.Template(markdown_string).render(p=data2)
+    except Exception as e:
+        print(f"error in jinja2 template: {file_template}")
+        print(e)
+        markdown_string = f"markdown_string_error\n{e}"
+    #make directory if it doesn't exist
+    directory = os.path.dirname(file_output)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    #mode = "open"
+    mode = "buffer"
+    
+    if mode == "open":
+        with open(file_output, "w", encoding="utf-8") as outfile:
+            outfile.write(markdown_string)
+            
+    elif mode == "buffer":
+        #write to a buffer then save for speen
+        with io.StringIO() as outfile:
+            outfile.write(markdown_string)
+            with open(file_output, "w", encoding="utf-8") as outfile2:
+                outfile2.write(outfile.getvalue())
                 
 
 if __name__ == '__main__':
