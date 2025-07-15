@@ -33,14 +33,14 @@ def main(**kwargs):
                 folder = folder_test
                 break
     kwargs["folder"] = folder
-    print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
+    #print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
     kwargs["folder_template"] = folder_template
     kwargs["file_template"] = file_template_default_absolute
     folder_template_absolute = os.path.join(os.path.dirname(__file__), folder_template)
     kwargs["folder_template_absolute"] = folder_template_absolute
     file_template_absolute = os.path.join(os.path.dirname(__file__), file_template_default)
     kwargs["file_template_absolute"] = file_template_absolute
-    print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
+    #print(f"oomlout_oomp_utility_readme_generation for folder: {folder}")
     create_readme_recursive(**kwargs)
     
 def create_readme_recursive(**kwargs):
@@ -60,7 +60,8 @@ def create_readme_recursive(**kwargs):
         with semaphore:
             create_recursive_thread(**kwargs)
     folders = os.listdir(folder)
-    print(f"folders: {folders}")
+    #print(f"folders: {folders}")
+    print("      ------>>  making readme for parts  <<------")
     for item in folders:
         #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
         kwargs["item"] = item
