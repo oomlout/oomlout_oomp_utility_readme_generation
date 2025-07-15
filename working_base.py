@@ -169,10 +169,6 @@ def generate_readme_generic(item, directory, **kwargs):
         get_jinja2_template(file_template=file_template,file_output=file_output,dict_data=dict_data)
 
 def get_jinja2_template(**kwargs):
-    # import cProfile
-    # profiler = cProfile.Profile()
-    # profiler.enable()
-    
     file_template = kwargs.get("file_template","")
     file_output = kwargs.get("file_output","")
     dict_data = kwargs.get("dict_data",{})
@@ -214,15 +210,6 @@ def get_jinja2_template(**kwargs):
             outfile.write(markdown_string)
             with open(file_output, "w", encoding="utf-8") as outfile2:
                 outfile2.write(outfile.getvalue())
-
-    
-    # profiler.disable()
-    # stat_file = 'temporary/profile_output.prof'
-    # profiler.dump_stats(f'{stat_file}')
-    # print(f"Profiling data saved to {stat_file}")
-
-    # #launch visualizer
-    # os.system(f'snakeviz {stat_file}')
                 
 
 if __name__ == '__main__':
