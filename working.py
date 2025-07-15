@@ -56,16 +56,17 @@ def create_readme_recursive(**kwargs):
     semaphore = threading.Semaphore(10)
     threads = []
 
-    def create_thread(**kwargs):
+    def create_thread(item, **kwargs):
         with semaphore:
-            create_recursive_thread(**kwargs)
+            create_recursive_thread(item, **kwargs)
     folders = os.listdir(folder)
     #print(f"folders: {folders}")
     print("      ------>>  making readme for parts  <<------")
     for item in folders:
         #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
-        kwargs["item"] = item
-        thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
+        #kwargs["item"] = item
+        #thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
+        thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
         threads.append(thread)
         thread.start()
     for thread in threads:
@@ -73,8 +74,9 @@ def create_readme_recursive(**kwargs):
 
 cnt_readme = 0
 
-def create_recursive_thread(**kwargs):
-    item = kwargs.get("item")
+def create_recursive_thread(item, **kwargs):
+    #item = kwargs.get("item")
+    item = item
     global cnt_readme
     folder = kwargs.get("folder")
     item_absolute = os.path.join(folder, item)
@@ -84,27 +86,28 @@ def create_recursive_thread(**kwargs):
         if os.path.isdir(item_absolute):
             #if working.yaml exists in the folder
             if os.path.exists(os.path.join(item_absolute, "working.yaml")):
-                kwargs["directory"] = item_absolute
-                create_readme(**kwargs)
+                #kwargs["directory"] = item_absolute
+                directory = item_absolute
+                create_readme(item, directory, **kwargs)
                 cnt_readme += 1
                 if cnt_readme % 100 == 0:
                     print(f".", end="")
 
 
-def create_readme(**kwargs):
-    directory = kwargs.get("directory", os.getcwd())    
-    kwargs["directory"] = directory
-    file_template = kwargs.get("file_template", file_template_default_absolute)
-    kwargs["file_template"] = file_template
+def create_readme(item, directory, **kwargs):
+    #directory = kwargs.get("directory", os.getcwd())    
+    #kwargs["directory"] = directory
+    #file_template = kwargs.get("file_template", file_template_default_absolute)
+    #kwargs["file_template"] = file_template
 
 
 
-    generate_readme_generic(**kwargs)
+    generate_readme_generic(item, directory, **kwargs)
     
 
-def generate_readme_generic(**kwargs):
+def generate_readme_generic(item, directory, **kwargs):
     import os
-    directory = kwargs.get("directory",os.getcwd())    
+    #directory = kwargs.get("directory",os.getcwd())    
     file_template = kwargs.get("file_template", file_template_default_absolute)
     file_output = f"{directory}/readme.md"
     details = {}
