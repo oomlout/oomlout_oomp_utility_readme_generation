@@ -53,7 +53,7 @@ def create_readme_recursive(**kwargs):
     
     
     import threading
-    semaphore = threading.Semaphore(1000)
+    semaphore = threading.Semaphore(10)
     threads = []
 
     def create_thread(**kwargs):
