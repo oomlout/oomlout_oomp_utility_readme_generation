@@ -49,6 +49,8 @@ def create_readme_recursive(**kwargs):
     folder_template_absolute = kwargs.get("folder_template_absolute", "")
     kwargs["folder_template_absolute"] = folder_template_absolute
     
+    filt = kwargs.get("filter", "")
+
     count = 0
     
     
@@ -62,13 +64,25 @@ def create_readme_recursive(**kwargs):
     folders = os.listdir(folder)
     #print(f"folders: {folders}")
     print("      ------>>  making readme for parts  <<------")
-    for item in folders:
-        #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
-        #kwargs["item"] = item
-        #thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
-        thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
-        threads.append(thread)
-        thread.start()
+    #old school no filt ""
+    if filt == "":
+        for item in folders:        
+            #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+            #kwargs["item"] = item
+            #thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
+            thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+            threads.append(thread)
+            thread.start()
+    else:
+        print(f"******  filtering for: {filt}  ******")
+        for item in folders:
+            if filt in item:            
+                #thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+                #kwargs["item"] = item
+                #thread = threading.Thread(target=create_thread, kwargs=pickle.loads(pickle.dumps(kwargs, -1)))
+                thread = threading.Thread(target=create_thread, args=(item,), kwargs=kwargs)
+                threads.append(thread)
+                thread.start()
     for thread in threads:
         thread.join()
 
