@@ -124,6 +124,7 @@ def generate_readme_generic(item, directory, **kwargs):
     #directory = kwargs.get("directory",os.getcwd())    
     file_template = kwargs.get("file_template", file_template_default_absolute)
     file_output = f"{directory}/readme.md"
+    file_output_html = file_output.replace(".md", ".html")
     details = {}
 
     #      yaml part
@@ -181,6 +182,15 @@ def generate_readme_generic(item, directory, **kwargs):
         file_output = file_output
         dict_data = details
         get_jinja2_template(file_template=file_template,file_output=file_output,dict_data=dict_data)
+        #open markdown file and read into a string
+        with open(file_output, "r", encoding="utf-8") as infile:
+            markdown_string = infile.read()
+            #convert markdown to html
+        import markdown
+        html = markdown.markdown(markdown_string, extensions=['fenced_code', 'tables', 'codehilite'])
+        #write html to file
+        with open(file_output_html, "w", encoding="utf-8") as outfile_html:
+            outfile_html.write(html)
 
 def get_jinja2_template(**kwargs):
     # import cProfile
