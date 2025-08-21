@@ -204,7 +204,7 @@ def md_to_pretty_html(md_text: str, title="My Page") -> str:
         "admonition",     # !!! note style callouts
         "codehilite",     # pygments syntax highlighting
     ]
-    html_body = markdown(
+    html_body = markdown.markdown(
         md_text,
         extensions=exts,
         extension_configs={
