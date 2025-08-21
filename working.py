@@ -5,6 +5,8 @@ import copy
 import jinja2    
 import pickle
 import io 
+from pygments.formatters import HtmlFormatter
+import markdown
 
 folder_template = "templates"
 file_template_default = os.path.join(folder_template, "oomlout_template_part_default.md.j2")
@@ -186,11 +188,56 @@ def generate_readme_generic(item, directory, **kwargs):
         with open(file_output, "r", encoding="utf-8") as infile:
             markdown_string = infile.read()
             #convert markdown to html
-        import markdown
-        html = markdown.markdown(markdown_string, extensions=['fenced_code', 'tables', 'codehilite'])
+        
+        #html = markdown.markdown(markdown_string, extensions=['fenced_code', 'tables', 'codehilite'])
+        
+        
+        html = md_to_pretty_html(markdown_string, title=f"{item} - OOMLout Part")
         #write html to file
         with open(file_output_html, "w", encoding="utf-8") as outfile_html:
             outfile_html.write(html)
+
+def md_to_pretty_html(md_text: str, title="My Page") -> str:
+    exts = [
+        "extra",          # tables, fenced code, footnotes, attr_list, etc.
+        "toc",            # heading anchors + optional [TOC]
+        "admonition",     # !!! note style callouts
+        "codehilite",     # pygments syntax highlighting
+    ]
+    html_body = markdown(
+        md_text,
+        extensions=exts,
+        extension_configs={
+            "toc": {"permalink": "¶"},
+            "codehilite": {"guess_lang": False, "pygments_style": "friendly"},
+        },
+    )
+    pyg_css = HtmlFormatter(style="friendly").get_style_defs(".codehilite")
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title>
+<!-- Classless CSS = modern look without touching your HTML -->
+<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
+<style>
+{pyg_css}
+/* small niceties */
+main{{max-width:72ch;margin:auto;padding:2rem 1rem}}
+pre{{overflow-x:auto}}
+img{{max-width:100%;height:auto}}
+.admonition{{border-left:4px solid rgba(0,0,0,.15);padding:.75rem 1rem;margin:1rem 0;background:rgba(0,0,0,.03);border-radius:.5rem}}
+.admonition > .admonition-title{{font-weight:600;margin-bottom:.25rem}}
+</style>
+</head>
+<body>
+<main>
+{html_body}
+</main>
+</body>
+</html>"""
 
 def get_jinja2_template(**kwargs):
     # import cProfile
