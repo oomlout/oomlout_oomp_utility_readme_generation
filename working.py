@@ -305,7 +305,7 @@ if __name__ == '__main__':
     #folder = os.path.dirname(__file__)
     #folder = "C:/gh/oomlout_oomp_builder/parts"
     #folder = "C:/gh/oomlout_oomp_part_generation_version_1/parts"
-    #folder = "Z:\\oomlout_oomp_current_version_fast_test\\parts"
+    folder = "Z:\\oomlout_oomp_current_version_fast_test\\parts"
     kwargs["folder"] = folder
     print(f"generating for folder: {folder}")
     main(**kwargs)
